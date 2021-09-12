@@ -31,9 +31,9 @@ export default {
   data() {
     return {
       userInfo: {
-        mobile: '13611111111',
+        mobile: '13911111111',
         code: '246810'
-        // mobile: '13611111111',
+        // mobile: '13611111111','13911111111','13922222222','17090086870'
         // code: '246810'
       },
       formRules: {
@@ -68,11 +68,14 @@ export default {
       })
       try {
         const { data: res } = await userLogin(this.userInfo)
-        console.log(res)
+        // console.log(res)
         this.$toast.success('登录成功!')
 
         // 将后端返回的用户登录状态(touken等数据)放到vuex容器中
         this.$store.commit('setUser', res.data)
+
+        // 登录后跳转回之前的页面
+        this.$router.back()
       } catch (err) {
         console.log(err, '验证失败')
         this.$toast.fail({
@@ -120,8 +123,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.van-field {
+/deep/ .van-field {
+  justify-content: center;
   align-items: center;
+  .toutiao {
+    font-size: 20px;
+  }
   .smsBtn {
     width: 76px;
     border-radius: 23px;

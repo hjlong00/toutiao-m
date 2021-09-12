@@ -15,7 +15,7 @@ export default new Vuex.Store({
       state.user = data
 
       // 为了防止页面刷新数据丢失,还需要把数据放到本地存储中,目的为了持久化数据
-      setItem(USER_KEY, state.user)
+      setItem(USER_KEY, data)
       // window.localStorage.setItem('user', JSON.stringify(state.user))
     }
   },

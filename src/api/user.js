@@ -3,6 +3,7 @@
  */
 
 import request from '@/utils/request'
+// import store from '@/store/'
 
 // 用户登录
 export const userLogin = data => {
@@ -17,5 +18,15 @@ export const sendSms = mobile => {
   return request({
     method: 'get',
     url: `/app/v1_0/sms/codes/${mobile}`
+  })
+}
+// 获取用户信息
+export const getUserInfo = () => {
+  return request({
+    method: 'get',
+    url: '/app/v1_0/user'
+    // headers: {
+    //   Authorization: `Bearer ${store.state.user.token}`
+    // }
   })
 }
