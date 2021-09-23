@@ -9,7 +9,7 @@ import request from '@/utils/request'
 export const userLogin = data => {
   return request({
     method: 'post',
-    url: '/app/v1_0/authorizations',
+    url: '/v1_0/authorizations',
     data
   })
 }
@@ -24,16 +24,16 @@ export const sendSms = mobile => {
 export const getUserInfo = () => {
   return request({
     method: 'get',
-    url: '/app/v1_0/user'
+    url: '/v1_0/user'
     // headers: {
     //   Authorization: `Bearer ${store.state.user.token}`
     // }
   })
 }
 // 获取用户频道列表
-export const getChannels = () => {
+export const getUserChannels = () => {
   return request({
     method: 'get',
-    url: '/app/v1_0/user/channels'
+    url: '/v1_0/user/channels'
   })
 }

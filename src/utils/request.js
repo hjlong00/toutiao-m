@@ -2,7 +2,8 @@ import axios from 'axios'
 import store from '@/store/'
 
 const request = axios.create({
-  baseURL: 'http://ttapi.research.itcast.cn/',
+  // baseURL: 'http://ttapi.research.itcast.cn/',
+  baseURL: '',
   timeout: 5000
 })
 

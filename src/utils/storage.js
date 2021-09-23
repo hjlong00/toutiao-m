@@ -13,6 +13,7 @@ export const getItem = name => {
     return data
   }
 }
+
 export const setItem = (name, value) => {
   // 如果value是对象,就把 value 转为 JSON 格式字符串再存储
   if (typeof value === 'object') {
@@ -20,6 +21,7 @@ export const setItem = (name, value) => {
   }
   window.localStorage.setItem(name, value)
 }
+
 export const removeItem = name => {
   window.localStorage.removeItem(name)
 }
