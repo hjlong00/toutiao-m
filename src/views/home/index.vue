@@ -2,7 +2,7 @@
   <div id='home'>
 
     <van-nav-bar>
-      <van-button slot="title" round icon-prefix="toutiao" icon="sousuo">搜索</van-button>
+      <van-button slot="title" round icon-prefix="toutiao" icon="sousuo" to="search">搜索</van-button>
     </van-nav-bar>
 
     <van-tabs v-model="active">
@@ -112,7 +112,7 @@ export default {
   // 占位元素
   .emptyTab {
     flex-shrink: 0;
-    width: 22px;
+    width: 32px;
   }
   .wap-nav-wrap {
     position: fixed;
