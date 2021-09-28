@@ -17,7 +17,7 @@ export const userLogin = data => {
 export const sendSms = mobile => {
   return request({
     method: 'get',
-    url: `/app/v1_0/sms/codes/${mobile}`
+    url: `/v1_0/sms/codes/${mobile}`
   })
 }
 // 获取用户信息
@@ -35,5 +35,28 @@ export const getUserChannels = () => {
   return request({
     method: 'get',
     url: '/v1_0/user/channels'
+  })
+}
+// 获取用户个人资料
+export const getUserProfile = () => {
+  return request({
+    method: 'get',
+    url: '/v1_0/user/profile'
+  })
+}
+// 编辑用户个人资料
+export const updateUserProfile = data => {
+  return request({
+    method: 'patch',
+    url: '/v1_0/user/profile',
+    data
+  })
+}
+// 编辑用户个人头像
+export const updateUserPhoto = data => {
+  return request({
+    method: 'patch',
+    url: '/v1_0/user/photo',
+    data
   })
 }

@@ -2,7 +2,7 @@
   <div id='search-index'>
     <!-- 搜索栏 -->
     <form action="/" class="search-form">
-      <van-search v-model="searchText" show-action placeholder="请输入搜索关键词" @search="onSearch"
+      <van-search v-model.trim="searchText" show-action placeholder="请输入搜索关键词" @search="onSearch"
         @cancel="$router.back()" @focus="isResultShow = false" />
     </form>
 

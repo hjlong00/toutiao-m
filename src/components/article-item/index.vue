@@ -1,6 +1,6 @@
 <template>
   <div id='article-item'>
-    <van-cell>
+    <van-cell :to="{name:'article',params:{articleId:article.art_id}}">
 
       <div slot="title" class="title van-multi-ellipsis--l3">{{article.title}}</div>
 
@@ -31,7 +31,7 @@ export default {
   props: {
     article: {
       type: Object,
-      require: true
+      required: true
     }
   },
   data() {

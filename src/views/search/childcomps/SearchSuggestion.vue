@@ -19,7 +19,7 @@ export default {
     // 搜索词
     searchText: {
       tyep: String,
-      require: true
+      required: true
     }
   },
   data() {

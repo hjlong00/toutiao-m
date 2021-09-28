@@ -1,9 +1,11 @@
 <template>
-  <div id='article-list'>
+  <div id='article-list' ref="article-list">
     <van-pull-refresh v-model="isRefreshLoading" :success-text="refreshSuccessText"
       :success-duration="1000" @refresh="onRefresh">
-      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <article-item v-for="(item,i) in articlesList" :key="i" :title="item.title" :article=item />
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了"
+        @load="onLoad">
+        <article-item v-for="(item,i) in articlesList" :key="i" :title="item.title"
+          :article=item />
       </van-list>
     </van-pull-refresh>
   </div>
@@ -11,8 +13,8 @@
 
 <script>
 import ArticleItem from '@/components/article-item'
-
 import { getArticles } from '@/api/home'
+import { debounce } from 'lodash'
 
 export default {
   components: {
@@ -22,7 +24,7 @@ export default {
   props: {
     channel: {
       type: Object,
-      require: true
+      required: true
     }
   },
   data() {
@@ -32,8 +34,20 @@ export default {
       loading: false, // 控制加载中的 loading 状态
       finished: false, // 控制加载结束的状态
       pre_timestamp: null, // 请求数据的时间戳
-      refreshSuccessText: '' // 下拉刷新成功的提示信息
+      refreshSuccessText: '', // 下拉刷新成功的提示信息
+      scrollTop: 0 // 页面到顶部的距离
     }
+  },
+  mounted() {
+    const articleList = this.$refs['article-list']
+    articleList.onscroll = debounce(() => {
+      // console.log('记录高度')
+      this.scrollTop = articleList.scrollTop
+    }, 50)
+  },
+  activated() {
+    const articleList = this.$refs['article-list']
+    articleList.scrollTop = this.scrollTop
   },
   methods: {
     async onLoad() {
@@ -82,7 +96,6 @@ export default {
       // 下拉更新结束
       this.isRefreshLoading = false
     }
-
   }
 }
 </script>

@@ -14,7 +14,7 @@ export default {
   props: {
     searchText: {
       type: String,
-      require: true
+      required: true
     }
   },
   data() {
@@ -22,7 +22,8 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      page: 1 // 请求页码
+      page: 1, // 请求页码
+      perPage: 20
     }
   },
   methods: {
@@ -30,6 +31,7 @@ export default {
       // 1,请求获取数据
       const { data: res } = await getSearchResult({
         page: this.page, // 搜索的页码
+        per_page: this.perPage, // 每页数量,不传每页数量由后端决定
         q: this.searchText // 搜索的字符
       })
 

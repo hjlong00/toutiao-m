@@ -2,8 +2,8 @@
   <div id=''>
     <van-nav-bar title="注册 / 登录" left-arrow @click-left="$router.back()" />
 
-    <van-form :show-error-message="false" :show-error="false" validate-first @submit="onLogin"
-      @failed="onFailed" ref="loginFormRef">
+    <van-form :show-error-message="false" :show-error="false" validate-first
+      @submit="onLogin" @failed="onFailed" ref="loginFormRef">
       <van-field center v-model="userInfo.mobile" name="mobile" placeholder="请输入手机号"
         :rules="formRules.mobile" icon-prefix="toutiao" left-icon="shouji" />
       <van-field center v-model="userInfo.code" name="code" placeholder="请输入验证码"
@@ -68,14 +68,17 @@ export default {
       })
       try {
         const { data: res } = await userLogin(this.userInfo)
-        // console.log(res)
+        console.log(res)
         this.$toast.success('登录成功!')
 
         // 将后端返回的用户登录状态(touken等数据)放到vuex容器中
         this.$store.commit('setUser', res.data)
 
+        // 移除layout缓存
+        this.$store.commit('removeCachePages', 'layout')
+
         // 登录后跳转回之前的页面
-        this.$router.back()
+        this.$router.replace(this.$route.query.redirect || '/')
       } catch (err) {
         console.log(err, '验证失败')
         this.$toast.fail({

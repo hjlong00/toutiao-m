@@ -2,7 +2,8 @@
   <div id='home'>
 
     <van-nav-bar>
-      <van-button slot="title" round icon-prefix="toutiao" icon="sousuo" to="search">搜索</van-button>
+      <van-button slot="title" round icon-prefix="toutiao" icon="sousuo" to="search">搜索
+      </van-button>
     </van-nav-bar>
 
     <van-tabs v-model="active">
@@ -12,14 +13,15 @@
       <!-- 汉堡 按钮定位把列表最后的位置给挡住了,解决办法是在这里再添加一个占位元素. 可以添加多个同名插槽 -->
       <div class="emptyTab" slot="nav-right"></div>
       <!-- 用插槽添加 汉堡 图标 -->
-      <div class="wap-nav-wrap" slot="nav-right" @click="isChanlEditShow = !isChanlEditShow">
+      <div class="wap-nav-wrap" slot="nav-right"
+        @click="isChanlEditShow = !isChanlEditShow">
         <van-icon name="wap-nav" />
       </div>
     </van-tabs>
 
     <!-- 弹出层 -->
-    <van-popup class="chanledit-popup" position="bottom" v-model="isChanlEditShow" closeable
-      close-icon-position="top-left" get-container="body">
+    <van-popup class="chanledit-popup" position="bottom" v-model="isChanlEditShow"
+      closeable close-icon-position="top-left" get-container="body">
       <!-- 模板中的 $event 表示事件的参数 -->
       <channel-edit :userChannels="userChannels" @close="isChanlEditShow = false"
         @switchChannel="active = $event" :active="active" />
@@ -52,10 +54,12 @@ export default {
     this._getUserChannels()
   },
   methods: {
+    // 获取用户频道
     async _getUserChannels() {
       let channels = []
       // 1,是否处于登录状态?
       if (this.user) {
+        // 登录了,请求获取线上的用户频道列表数据
         const { data: res } = await getUserChannels()
         channels = res.data.channels
       } else {
@@ -63,6 +67,7 @@ export default {
         const localChannels = getItem('local-channels')
         // 3,那本地有没有存档?
         if (localChannels) {
+          // 有,那就把本地数据赋值给 channels 使用
           channels = localChannels
         } else {
           // 4,本地没有存档,那就发起请求获取推荐频道, 注意,这里的请求是不带token的,所以返回的是系统推荐的频道

@@ -2,9 +2,11 @@
   <div id='my-container'>
     <van-cell-group v-if="user" class="my-info">
       <van-cell center class="base-info" :border="false">
-        <van-image class="avatar" slot="icon" round fit="cover" :src="userInfo.photo" />
-        <div slot="title" class="name">{{userInfo.name}}</div>
-        <van-button round size="mini" class="edit-btn"> 编辑资料 </van-button>
+        <van-image class="avatar" slot="icon" round fit="cover" :src="userInfo.photo"
+          :key="userInfo.photo" />
+        <div slot="title" class="name" :key="userInfo.name">{{userInfo.name}}</div>
+        <van-button round size="mini" class="edit-btn" :to="{name:'userProfile'}"> 编辑资料
+        </van-button>
       </van-cell>
       <van-grid :border="false" class="data-info">
         <van-grid-item class="data-info-item">
@@ -34,7 +36,8 @@
       </van-grid>
     </van-cell-group>
 
-    <div v-else class="not-login" @click="$router.push('/login')">
+    <div v-else class="not-login"
+      @click="$router.push({name: 'login', query:{redirect:'/my'}})">
       <div><img src="~@/assets/img/my-shouji.png" alt=""></div>
       <div class="text">登录 / 注册</div>
     </div>
@@ -46,7 +49,7 @@
 
     <van-cell-group class="link mb-5">
       <van-cell title="消息通知" is-link to="/" />
-      <van-cell title="小智同学" is-link to="" />
+      <van-cell title="小思同学" is-link to="/chat" />
     </van-cell-group>
     <van-button v-if="user" block class="logout" @click="onLogout">退出登录</van-button>
   </div>
@@ -71,12 +74,24 @@ export default {
     // 但此时很可能用户还未登录,vuex里没有token,后台的请求就会报错
     // 加个前置做判断
     this.user && this._getUserInfo()
+
+    // 用户编辑完资料之后返回这个页面,要及时更新数据
+    this.$EventBus.$on('update', () => {
+      // console.log('听到修改的信息')
+      this._getUserInfo()
+    })
+  },
+  deactivated() {
+  },
+  activated() {
   },
   methods: {
     // 获取用户信息
     async _getUserInfo() {
       const { data: res } = await getUserInfo()
       this.userInfo = res.data
+      // console.log(res.data)
+      this.$store.commit('setUserInfo', res.data)
     },
     // 登出
     onLogout() {
@@ -93,6 +108,9 @@ export default {
           // on cancel
         })
     }
+  },
+  destroyed() {
+    console.log('xb')
   }
 }
 </script>

@@ -9,8 +9,9 @@
 
     <van-grid :gutter="10" :border="false">
       <van-grid-item :icon="(isEdit && i !== 0 && userChannels.length > 2) ? 'close' : ''"
-        v-for="(Channels,i) in userChannels" :key="Channels.id" :text="Channels.name"
-        @click="userChannelClick(i)" :class="{active : (i === active && isEdit !== true) }" />
+        v-for="(channel,i) in userChannels" :key="channel.id" :text="channel.name"
+        @click="userChannelClick(channel,i)"
+        :class="{active : (i === active && isEdit !== true) }" />
     </van-grid>
 
     <!-- 频道推荐 -->
@@ -19,14 +20,14 @@
     </van-cell>
 
     <van-grid :gutter="10" :border="false">
-      <van-grid-item v-for="Channels in recommendChannels" :key="Channels.id"
-        :text="`+ ${Channels.name}`" @click="addChannel(Channels)" />
+      <van-grid-item v-for="channel in recommendChannels" :key="channel.id"
+        :text="`+ ${channel.name}`" @click="addChannel(channel)" />
     </van-grid>
   </div>
 </template>
 
 <script>
-import { getAllChannels, updateUserChannels } from '@/api/channel'
+import { getAllChannels, addUserChannels, delUserChannels } from '@/api/channel'
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/storage'
 
@@ -35,11 +36,11 @@ export default {
   props: {
     userChannels: {
       type: Array,
-      require: true
+      required: true
     },
     active: {
       type: Number,
-      require: true
+      required: true
     }
   },
   data() {
@@ -73,43 +74,37 @@ export default {
       const { data: res } = await getAllChannels()
       this.allChannels = res.data.channels
     },
-    // 封装更新用户频道列表数据方法
-    async _updateUserChannels() {
-      // 1,准备要提交到服务器的数据
-      const channels = this.userChannels.map((item, index) => {
-        return {
-          id: item.id,
-          seq: index
-        }
-      })
-
-      // 2,发起请求
-      await updateUserChannels(channels)
-    },
     // 添加频道
-    addChannel(channel) {
+    async addChannel(channel) {
       this.userChannels.push(channel)
 
       // 数据持久化
       if (this.user) {
         // 登录了,数据存储到服务器
-        this._updateUserChannels()
+        await addUserChannels({
+          channels: [
+            {
+              id: channel.id,
+              seq: this.userChannels.length
+            }
+          ]
+        })
       } else {
         // 没有登录,数据存储到本地
         setItem('local-channels', this.userChannels)
       }
     },
     // 频道弹出层点击事件
-    userChannelClick(i) {
+    userChannelClick(channel, i) {
       // 删除添加频道
       if (this.isEdit && i !== 0 && this.userChannels.length > 2) {
-        this.delChannel(i)
+        this.delChannel(channel, i)
       } else if (!this.isEdit) { // 选择频道
         this.switchChannel(i)
       }
     },
     // 删除频道
-    delChannel(i) {
+    async delChannel(channel, i) {
       // 若果删除的项是在当前激活项的前面,则让active - 1
       // 如果删除的项是当前激活的项,则让 active 回到默认 0
       if (i < this.active) {
@@ -123,7 +118,7 @@ export default {
       // 判断是否是登录状态
       if (this.user) {
         // 发起请求更新列表
-        this._updateUserChannels()
+        await delUserChannels(channel.id)
       } else {
         // 保存到本地
         setItem('local-channels', this.userChannels)
